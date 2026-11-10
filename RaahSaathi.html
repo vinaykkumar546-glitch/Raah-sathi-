@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RaahSaathi – Adaptive Driving Companion for Indian Roads</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&family=Rajdhani:wght@600;700&display=swap">
+<style>
+:root{--bg:#f2eee2;--pn:#fffdf5;--ink:#1c2024;--mu:#5d666b;--gr:#0d5c3b;--gl:#e0eee5;--am:#b57600;--rd:#d62b25;--ln:#d9d3c0}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171a;--pn:#1e2328;--ink:#f1eddf;--mu:#9aa4a9;--gr:#2fae78;--gl:#17382b;--am:#f2a900;--rd:#ff4a43;--ln:#2e353b}}
+:root[data-theme="dark"]{--bg:#14171a;--pn:#1e2328;--ink:#f1eddf;--mu:#9aa4a9;--gr:#2fae78;--gl:#17382b;--am:#f2a900;--rd:#ff4a43;--ln:#2e353b}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Mukta,system-ui,sans-serif;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+h1,h2,h3,.hd{font-family:Rajdhani,system-ui,sans-serif;font-weight:700;margin:0;line-height:1.1}
+header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:3px solid var(--am);background:var(--pn);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.brand{flex:1}.brand h1{font-size:28px;letter-spacing:.5px}.brand small{color:var(--mu);font-size:13px}
+.net{font-size:12px;padding:2px 9px;border-radius:99px;background:var(--gl);color:var(--gr);font-weight:600}
+.net.off{background:#4a3a10;color:#ffd36b}
+.pill{border:0;background:var(--rd);color:#fff;font:700 18px Rajdhani,sans-serif;padding:6px 16px;border-radius:99px;cursor:pointer}
+main{max-width:720px;margin:0 auto;padding:14px}
+.tab[hidden]{display:none}
+.pn{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:12px;margin-bottom:12px}
+.pn h2{font-size:22px;margin-bottom:6px}
+.mu{color:var(--mu);font-size:14px}
+canvas{display:block;width:100%;max-width:360px;margin:0 auto;border-radius:8px;border:2px solid var(--ln);background:#2b2e32;touch-action:manipulation}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+button,select,input{font:inherit;color:inherit}
+.b{border:1px solid var(--ln);background:var(--pn);padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+.b.on{background:var(--gr);color:#fff;border-color:var(--gr)}
+.b.p{background:var(--gr);color:#fff;border-color:var(--gr)}
+a.b{text-decoration:none;display:inline-block;color:var(--ink)}
+a.b.p{color:#fff}
+select,input[type=text],input[type=tel],input[type=search]{background:var(--bg);border:1px solid var(--ln);border-radius:8px;padding:7px 10px;max-width:100%}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.stats div{background:var(--bg);border-radius:8px;padding:6px}
+.stats b{display:block;font:700 22px Rajdhani,sans-serif}
+.stats span{font-size:12px;color:var(--mu)}
+.lv{font:700 20px Rajdhani,sans-serif;padding:2px 12px;border-radius:6px;color:#fff}
+.l0{background:#1d8a57}.l1{background:#b57600}.l2{background:#d4570f}.l3{background:var(--rd)}
+.why{border-left:4px solid var(--am);padding:4px 10px;margin:8px 0;background:var(--bg)}
+ol.log{margin:6px 0 0;padding-left:20px;font-size:14px;color:var(--mu)}
+.sos{width:190px;height:190px;border-radius:50%;border:8px solid #ffd0cd;background:var(--rd);color:#fff;font:700 54px Rajdhani,sans-serif;cursor:pointer;display:block;margin:10px auto;box-shadow:0 0 0 6px rgba(214,43,37,.25)}
+.sos.cd{background:#7a1410;font-size:30px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:480px){.grid2{grid-template-columns:1fr}}
+.fg h3{font-size:20px;color:var(--gr);margin:12px 0 4px}
+.fi{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px dashed var(--ln)}
+.chip{font-size:12px;font-weight:600;border-radius:99px;padding:0 9px;white-space:nowrap;align-self:center}
+.chip.y{background:var(--gl);color:var(--gr)}.chip.n{background:var(--bg);color:var(--mu);border:1px solid var(--ln)}
+.num{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--ln)}
+.num .n{font:700 28px Rajdhani,sans-serif;min-width:92px;color:var(--gr)}
+.num .t{flex:1;line-height:1.25}.num .t small{color:var(--mu);display:block}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--gr);padding-bottom:env(safe-area-inset-bottom,0px);z-index:6}
+nav button{flex:1;border:0;background:none;color:#fff;font:700 17px Rajdhani,sans-serif;padding:14px 0;cursor:pointer;opacity:.75}
+nav button[aria-current="true"]{opacity:1;box-shadow:inset 0 -4px 0 #f2a900}
+:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><h1>RaahSaathi <span style="font-weight:600">राह साथी</span></h1><small>Your road companion for unstructured Indian roads</small></div>
+ <span class="net" id="net">Online</span>
+ <button class="pill" onclick="go('sos')">SOS</button>
+</header>
+<main>
+
+<section class="tab" id="t-drive">
+ <div class="pn">
+  <h2>Live driving simulator</h2>
+  <p class="mu">No lane lines. The planner finds gaps in mixed traffic, scores erratic drivers and explains every move. This demo uses a rule-based planner, not a trained model.</p>
+  <canvas id="sim" width="360" height="520" aria-label="Top-down simulation of lane-less Indian traffic"></canvas>
+  <div class="row">
+   <label>Conditions <select id="wx"><option value="clear">Clear</option><option value="night">Night</option><option value="fog">Fog</option><option value="rain">Monsoon rain</option></select></label>
+   <label><input type="checkbox" id="cam"> Camera-only mode</label>
+   <label><input type="checkbox" id="heat" checked> Risk heatmap</label>
+  </div>
+  <div class="row"><span class="mu">Inject edge case:</span>
+   <button class="b" onclick="inj('cow')">Cow crossing</button>
+   <button class="b" onclick="inj('cut')">Auto cut-in</button>
+   <button class="b" onclick="inj('ped')">Jaywalker</button>
+   <button class="b" onclick="inj('water')">Waterlogging</button>
+  </div>
+ </div>
+ <div class="pn">
+  <div class="row"><span class="lv l0" id="lvl">Safe</span><span class="mu" id="honk"></span></div>
+  <div class="stats">
+   <div><b id="spd">0</b><span>km/h</span></div><div><b id="ttc">–</b><span>time to collision</span></div><div><b id="dst">0</b><span>metres driven</span></div>
+   <div><b id="col">0</b><span>collisions</span></div><div><b id="nm">0</b><span>near misses</span></div><div><b id="det">0</b><span>objects tracked</span></div>
+  </div>
+  <div class="why" id="why">Starting…</div>
+  <h3 style="font-size:18px">Black-box log</h3>
+  <ol class="log" id="logl"></ol>
+ </div>
+</section>
+
+<section class="tab" id="t-map" hidden>
+ <div class="pn">
+  <h2>Map</h2>
+  <p class="mu" id="mapnote">Drawn on your device from GPS, so it keeps working with no signal. Pinned hazards are saved locally.</p>
+  <canvas id="map" width="360" height="420" aria-label="Offline map with your position and hazards"></canvas>
+  <div class="row">
+   <button class="b p" onclick="locate()">Locate me</button>
+   <button class="b" onclick="zoom(-1)" aria-label="Zoom in">＋</button>
+   <button class="b" onclick="zoom(1)" aria-label="Zoom out">－</button>
+   <a class="b" id="osm" target="_blank" rel="noopener" href="https://www.openstreetmap.org/">Street map (online)</a>
+  </div>
+  <div class="row">
+   <select id="htype"><option value="🕳️">Pothole</option><option value="🚧">Speed-breaker</option><option value="🌊">Waterlogging</option><option value="🐄">Stray animals</option><option value="⚠️">Roadwork</option></select>
+   <button class="b" onclick="pin(pos.lat,pos.lon)">Pin here</button>
+   <button class="b" id="pinm" onclick="togglePin()">Tap-to-pin: off</button>
+   <button class="b" onclick="hz=[];ls.set('hz',hz);drawMap()">Clear pins</button>
+  </div>
+  <p class="mu" id="mapinfo">Waiting for location. Showing New Delhi until GPS is on.</p>
+ </div>
+</section>
+
+<section class="tab" id="t-sos" hidden>
+ <div class="pn">
+  <h2>SOS</h2>
+  <p class="mu">Press once. After a 3-second countdown (tap again to cancel) we read your GPS location and open a ready-to-send message with a map link to your saved contacts.</p>
+  <button class="sos" id="sosb" onclick="sosPress()">SOS</button>
+  <div id="sosres" class="mu" aria-live="polite"></div>
+ </div>
+ <div class="pn">
+  <h2>Emergency contacts</h2>
+  <div class="grid2">
+   <input type="text" id="c1n" placeholder="Contact 1 name"><input type="tel" id="c1p" placeholder="Contact 1 number">
+   <input type="text" id="c2n" placeholder="Contact 2 name"><input type="tel" id="c2p" placeholder="Contact 2 number">
+  </div>
+  <div class="row"><button class="b p" onclick="saveC()">Save contacts</button><span class="mu" id="cmsg"></span></div>
+  <p class="mu">Browsers can’t send texts silently, so your phone’s message app opens with the text filled in. Tap Send. Allow location when asked.</p>
+ </div>
+</section>
+
+<section class="tab" id="t-feat" hidden>
+ <div class="pn fg"><h2>Everything in RaahSaathi</h2><p class="mu">“Live” features run in this site. “Planned” ones belong to the full vehicle stack.</p><div id="fl"></div></div>
+</section>
+
+<section class="tab" id="t-num" hidden>
+ <div class="pn">
+  <h2>Emergency numbers, India</h2>
+  <input type="search" id="nq" placeholder="Search: police, ambulance, highway…" style="width:100%">
+  <div id="nl"></div>
+  <p class="mu">National defaults. Some services vary by state, so confirm the ones you rely on.</p>
+ </div>
+</section>
+</main>
+
+<nav aria-label="Sections">
+ <button data-t="drive">Drive</button><button data-t="map">Map</button><button data-t="sos">SOS</button><button data-t="feat">Features</button><button data-t="num">Numbers</button>
+</nav>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],rnd=(a,b)=>a+Math.random()*(b-a);
+const ls={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let active='drive';
+function go(t){active=t;$$('.tab').forEach(e=>e.hidden=e.id!=='t-'+t);$$('nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.t===t));if(t==='map')drawMap();scrollTo(0,0)}
+$$('nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));go('drive');
+function netU(){const n=$('#net');n.textContent=navigator.onLine?'Online':'Offline: everything still works';n.className='net'+(navigator.onLine?'':' off')}
+addEventListener('online',netU);addEventListener('offline',netU);netU();
+
+/* ---------- Driving simulator ---------- */
+const cv=$('#sim'),cx=cv.getContext('2d'),W=360,H=520,EY=430;
+const TY={auto:{e:'🛺',w:28,h:34,s:1.6,v:0},bike:{e:'🏍️',w:14,h:26,s:2,v:1},cow:{e:'🐄',w:26,h:34,s:.3,v:1},ped:{e:'🚶',w:12,h:18,s:0,v:1},truck:{e:'🚛',w:40,h:76,s:1,v:0},pothole:{w:34,h:22,s:0,v:0},water:{w:90,h:50,s:0,v:0},bump:{w:360,h:14,s:0,v:0}};
+const NM={auto:'auto-rickshaw',bike:'two-wheeler',cow:'cow',ped:'pedestrian',truck:'truck',pothole:'pothole',water:'waterlogged patch',bump:'speed-breaker'};
+const KINDS=['auto','auto','bike','bike','cow','ped','truck','pothole','pothole','bump','water'];
+let ego={x:180,v:3},obs=[],tk=0,S={col:0,nm:0,dist:0},logs=[],lastKey='',patches=Array.from({length:34},()=>[rnd(22,320),rnd(0,H),rnd(8,40),rnd(4,14)]);
+function spawn(k,x,y,vx){k=k||KINDS[Math.random()*KINDS.length|0];const T=TY[k];obs.push({k,x:x??(k==='bump'?180:rnd(40,320)),y:y??-60,vx:vx??(k==='ped'?(Math.random()<.5?-1:1)*.9:k==='cow'?rnd(-.2,.2):0),s:T.s*rnd(.8,1.2),agg:0})}
+function inj(t){if(t==='cow')spawn('cow',ego.x+rnd(-30,30),-20,0);if(t==='cut')spawn('auto',ego.x+70,140,-1.6);if(t==='ped')spawn('ped',40,60,1.3);if(t==='water')spawn('water',ego.x,-30,0);if(t==='cut')obs[obs.length-1].agg=.8}
+function pr(o,x){const rel=ego.v-o.s,tr=rel>.05?(EY-o.y)/rel:999,t=Math.max(tr,0),px=o.x+o.vx*t*(1+o.agg*.5);return{t,gap:Math.abs(x-px)-(TY[o.k].w/2+19)}}
+function risk(x,o){if(o.k==='bump')return 0;const{t,gap}=pr(o,x);if(t>140)return 0;const wt=(TY[o.k].v?2:1)*(1+o.agg),p=1-t/140;return gap<0?wt*3*(1+p):wt*p*Math.exp(-gap/25)*1.2}
+function logE(m){logs.unshift((tk/60|0)+'s: '+m);if(logs.length>40)logs.pop()}
+function step(){
+ tk++;const wx=$('#wx').value,cam=$('#cam').checked;
+ const rng=({clear:430,night:280,fog:200,rain:320})[wx]*(cam?.85:1);
+ if(tk%45===0&&Math.random()<.85)spawn();
+ obs.forEach(o=>{if((o.k==='auto'||o.k==='bike')&&Math.random()<.012){o.vx=rnd(-1.6,1.6);o.agg=Math.min(1,o.agg+.35)}
+  o.x+=o.vx;if(o.k==='ped'&&(o.x<24||o.x>336))o.vx*=-1;o.y+=ego.v-o.s;o.agg*=.998});
+ obs=obs.filter(o=>o.y<H+90);
+ const vis=obs.filter(o=>EY-o.y<=rng&&o.y<EY+TY[o.k].h/2+10);
+ let bx=ego.x,bc=1e9;
+ for(let x=26;x<=334;x+=6){let c=Math.abs(x-ego.x)*.004+Math.abs(x-180)*.002;vis.forEach(o=>c+=risk(x,o));if(c<bc){bc=c;bx=x}}
+ ego.x+=Math.max(-2.4,Math.min(2.4,bx-ego.x));
+ let tt=99,top=null,tr0=0;
+ vis.forEach(o=>{if(o.k==='bump')return;const q=pr(o,ego.x),r=risk(ego.x,o);if(r>tr0){tr0=r;top=o}if(q.gap<6&&q.t/30<tt)tt=q.t/30});
+ const lvl=tt>3.2?0:tt>2.2?1:tt>1.3?2:3;
+ let tgt=[3,3,1.9,.5][lvl]*(wx==='clear'?1:.8);
+ if(obs.some(o=>o.k==='bump'&&EY-o.y<110&&o.y<EY+10))tgt=Math.min(tgt,1.2);
+ ego.v+=(tgt-ego.v)*(lvl===3?.2:.06);S.dist+=ego.v*.05;
+ obs.forEach(o=>{const T=TY[o.k];if(o.k==='bump'||o.hit)return;
+  if(Math.abs(o.x-ego.x)<T.w/2+11&&Math.abs(o.y-EY)<T.h/2+19){o.hit=1;S.col++;logE('Collision with '+NM[o.k]);return}
+  if(!o.pass&&o.y>EY+T.h/2+19){o.pass=1;if(Math.abs(o.x-ego.x)<T.w/2+22){S.nm++;logE('Near miss: '+NM[o.k])}}});
+ const dir=Math.abs(bx-ego.x)>12?(bx>ego.x?'right':'left'):'';
+ let why;
+ if(lvl===3)why='Emergency brake: '+(top?NM[top.k]:'obstacle')+' in path, collision in '+tt.toFixed(1)+' s.';
+ else if(lvl===2)why='Slowing down: '+NM[top.k]+' ahead'+(top.agg>.4?' and driving erratically (risk '+top.agg.toFixed(1)+')':'')+', '+tt.toFixed(1)+' s to contact.';
+ else if(lvl===1)why='Warning: '+NM[top.k]+' may cross our path in '+tt.toFixed(1)+' s.';
+ else if(dir)why='Steering '+dir+' into a wider gap'+(top?' away from the '+NM[top.k]+(TY[top.k].v?' (vulnerable road user, extra margin)':''):'')+'.';
+ else why='Path clear. Cruising'+(wx!=='clear'?' at reduced speed for '+wx:'')+(cam?' on camera-only sensing':'')+'.';
+ const key=lvl+dir+(top?top.k:'');if(key!==lastKey&&(lvl||dir)){logE(why)}lastKey=key;
+ draw(rng,bx,vis,wx);
+ if(tk%6===0){const L=$('#lvl');L.textContent=['Safe','Warning','Slowing','Emergency brake'][lvl];L.className='lv l'+lvl;
+  $('#spd').textContent=Math.round(ego.v*15);$('#ttc').textContent=tt<99?tt.toFixed(1)+'s':'–';$('#dst').textContent=Math.round(S.dist);
+  $('#col').textContent=S.col;$('#nm').textContent=S.nm;$('#det').textContent=vis.length;$('#why').textContent=why;
+  $('#honk').textContent=vis.some(o=>o.agg>.5&&EY-o.y<220)?'🔊 Honk detected nearby':'';
+  $('#logl').innerHTML=logs.slice(0,6).map(l=>'<li>'+l+'</li>').join('')}
+}
+function draw(rng,bx,vis,wx){
+ cx.fillStyle='#2b2e32';cx.fillRect(0,0,W,H);cx.fillStyle='#5c4733';cx.fillRect(0,0,20,H);cx.fillRect(340,0,20,H);
+ cx.fillStyle='#363a3f';patches.forEach(p=>{p[1]+=ego.v;if(p[1]>H)p[1]-=H+30;cx.fillRect(p[0],p[1],p[2],p[3])});
+ if($('#heat').checked)for(let x=22;x<340;x+=6){let r=0;vis.forEach(o=>r+=risk(x+3,o));if(r>.05){cx.fillStyle='rgba(255,60,50,'+Math.min(.5,r*.22)+')';cx.fillRect(x,120,6,EY-90)}}
+ cx.textAlign='center';cx.textBaseline='middle';
+ obs.forEach(o=>{const T=TY[o.k];
+  if(o.k==='bump'){cx.fillStyle='#f2a900';for(let i=0;i<18;i++)if(i%2==0)cx.fillRect(i*20,o.y-7,20,14);return}
+  if(o.k==='pothole'){cx.fillStyle='#111';cx.beginPath();cx.ellipse(o.x,o.y,17,11,0,0,7);cx.fill();return}
+  if(o.k==='water'){cx.fillStyle='rgba(60,130,200,.7)';cx.beginPath();cx.ellipse(o.x,o.y,45,25,0,0,7);cx.fill();return}
+  cx.font=Math.max(24,Math.min(T.h,60))+'px serif';cx.fillText(T.e,o.x,o.y);
+  if(o.agg>.45){cx.fillStyle='#ff6b64';cx.font='700 12px Rajdhani,sans-serif';cx.fillText('risk '+o.agg.toFixed(1),o.x,o.y-T.h/2-6)}});
+ cx.strokeStyle='#f2a900';cx.lineWidth=3;cx.setLineDash([6,5]);cx.beginPath();cx.moveTo(ego.x,EY);cx.lineTo(bx,EY-130);cx.stroke();cx.setLineDash([]);
+ cx.font='34px serif';cx.fillText('🚗',ego.x,EY);
+ if(wx==='night'){const g=cx.createRadialGradient(ego.x,EY-60,40,ego.x,EY-60,300);g.addColorStop(0,'rgba(0,0,20,0)');g.addColorStop(1,'rgba(0,0,20,.82)');cx.fillStyle=g;cx.fillRect(0,0,W,H)}
+ if(wx==='fog'){const g=cx.createLinearGradient(0,0,0,EY);g.addColorStop(0,'rgba(215,220,225,.9)');g.addColorStop(1,'rgba(215,220,225,0)');cx.fillStyle=g;cx.fillRect(0,0,W,H)}
+ if(wx==='rain'){cx.fillStyle='rgba(20,40,70,.25)';cx.fillRect(0,0,W,H);cx.strokeStyle='rgba(200,220,255,.5)';cx.lineWidth=1;cx.beginPath();for(let i=0;i<45;i++){const x=rnd(0,W),y=rnd(0,H);cx.moveTo(x,y);cx.lineTo(x-3,y+12)}cx.stroke()}
+}
+setInterval(()=>{if(active==='drive'&&!document.hidden)step()},16);
+
+/* ---------- Map (drawn on-device, works offline) ---------- */
+const mc=$('#map'),mx=mc.getContext('2d'),MS=[.5,1,2,5,10,20,50];
+let pos=ls.get('pos',{lat:28.6139,lon:77.209,acc:0,live:false}),hz=ls.get('hz',[]),trail=ls.get('trail',[]),mi=2,pinMode=false,watching=false;
+const KX=lat=>111320*Math.cos(lat*Math.PI/180),KY=110540;
+function drawMap(){
+ const mpp=MS[mi],w=360,h=420,ce=pos.lon*KX(pos.lat),cn=pos.lat*KY;
+ const P=(lat,lon)=>[w/2+(lon*KX(pos.lat)-ce)/mpp,h/2-(lat*KY-cn)/mpp];
+ mx.fillStyle='#1d2b25';mx.fillRect(0,0,w,h);
+ const g=[10,20,50,100,200,500,1000,2000,5000].find(v=>v>=70*mpp)||5000;
+ mx.strokeStyle='rgba(255,255,255,.09)';mx.lineWidth=1;mx.beginPath();
+ for(let e=Math.ceil((ce-w/2*mpp)/g)*g;e<ce+w/2*mpp;e+=g){const x=w/2+(e-ce)/mpp;mx.moveTo(x,0);mx.lineTo(x,h)}
+ for(let n=Math.ceil((cn-h/2*mpp)/g)*g;n<cn+h/2*mpp;n+=g){const y=h/2-(n-cn)/mpp;mx.moveTo(0,y);mx.lineTo(w,y)}
+ mx.stroke();
+ mx.strokeStyle='rgba(255,255,255,.2)';mx.beginPath();for(let r=1;r<=3;r++){mx.moveTo(w/2+r*g/mpp,h/2);mx.arc(w/2,h/2,r*g/mpp,0,7)}mx.stroke();
+ if(trail.length>1){mx.strokeStyle='#f2a900';mx.lineWidth=3;mx.beginPath();trail.forEach((p,i)=>{const[x,y]=P(p[0],p[1]);i?mx.lineTo(x,y):mx.moveTo(x,y)});mx.stroke()}
+ mx.textAlign='center';mx.textBaseline='middle';mx.font='22px serif';
+ hz.forEach(p=>{const[x,y]=P(p.lat,p.lon);mx.fillText(p.t,x,y)});
+ if(pos.acc>0){mx.fillStyle='rgba(80,160,255,.18)';mx.beginPath();mx.arc(w/2,h/2,Math.min(150,pos.acc/mpp),0,7);mx.fill()}
+ mx.fillStyle='#3b8cff';mx.strokeStyle='#fff';mx.lineWidth=3;mx.beginPath();mx.arc(w/2,h/2,8,0,7);mx.fill();mx.stroke();
+ mx.fillStyle='#fff';mx.font='700 13px Rajdhani,sans-serif';mx.textAlign='left';mx.fillText('Grid: '+g+' m  ·  1 px = '+mpp+' m',8,h-12);mx.textAlign='right';mx.fillText('N ↑',w-10,16);
+ $('#mapinfo').textContent=(pos.live?'Live GPS: ':'Showing New Delhi until GPS is on: ')+pos.lat.toFixed(5)+', '+pos.lon.toFixed(5)+(pos.acc?' (±'+Math.round(pos.acc)+' m)':'')+' · '+hz.length+' pinned hazards';
+ $('#osm').href='https://www.openstreetmap.org/?mlat='+pos.lat+'&mlon='+pos.lon+'#map=17/'+pos.lat+'/'+pos.lon;
+}
+function zoom(d){mi=Math.max(0,Math.min(MS.length-1,mi+d));drawMap()}
+function onPos(p){const n={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy||0,live:true};
+ const l=trail[trail.length-1];if(!l||Math.hypot((n.lat-l[0])*KY,(n.lon-l[1])*KX(n.lat))>6){trail.push([n.lat,n.lon]);if(trail.length>300)trail.shift();ls.set('trail',trail)}
+ pos=n;ls.set('pos',n);if(active==='map')drawMap()}
+function locate(){if(!navigator.geolocation){$('#mapinfo').textContent='This device has no GPS access in the browser.';return}
+ if(!watching){watching=true;navigator.geolocation.watchPosition(onPos,e=>{watching=false;$('#mapinfo').textContent='Location blocked. Allow location for this site in your browser settings.'},{enableHighAccuracy:true,maximumAge:3000})}drawMap()}
+function pin(lat,lon){hz.push({lat,lon,t:$('#htype').value});ls.set('hz',hz);drawMap()}
+function togglePin(){pinMode=!pinMode;$('#pinm').textContent='Tap-to-pin: '+(pinMode?'on':'off');$('#pinm').classList.toggle('on',pinMode)}
+mc.onclick=e=>{if(!pinMode)return;const r=mc.getBoundingClientRect(),x=(e.clientX-r.left)*360/r.width,y=(e.clientY-r.top)*420/r.height,mpp=MS[mi];
+ pin(pos.lat-(y-210)*mpp/KY,pos.lon+(x-180)*mpp/KX(pos.lat))};
+
+/* ---------- SOS ---------- */
+let cd=null;
+function nrm(n){n=(n||'').replace(/[^\d+]/g,'');return n.length===10?'+91'+n:n}
+function contacts(){return ls.get('ct',[]).filter(c=>c.p)}
+function loadC(){const c=ls.get('ct',[{},{}]);['c1','c2'].forEach((k,i)=>{$('#'+k+'n').value=(c[i]||{}).n||'';$('#'+k+'p').value=(c[i]||{}).p||''})}
+function saveC(){ls.set('ct',['c1','c2'].map(k=>({n:$('#'+k+'n').value.trim(),p:nrm($('#'+k+'p').value)})));$('#cmsg').textContent='Saved on this device.';loadC()}
+loadC();
+function sosPress(){const b=$('#sosb'),r=$('#sosres');
+ if(cd){clearInterval(cd);cd=null;b.className='sos';b.textContent='SOS';r.textContent='Cancelled.';return}
+ if(!contacts().length){r.textContent='Save at least one contact below first.';$('#c1p').focus();return}
+ let n=3;b.className='sos cd';b.textContent='Sending in '+n+'… tap to cancel';r.textContent='';
+ cd=setInterval(()=>{n--;if(n>0){b.textContent='Sending in '+n+'… tap to cancel';return}clearInterval(cd);cd=null;b.className='sos';b.textContent='SOS';sendSOS()},1000)}
+function getLoc(){return new Promise(res=>{if(!navigator.geolocation)return res(pos.live?pos:null);
+ navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy||0}),()=>res(pos.live?pos:null),{enableHighAccuracy:true,timeout:8000,maximumAge:0})})}
+async function sendSOS(){const r=$('#sosres');r.textContent='Getting your exact location…';navigator.vibrate&&navigator.vibrate(300);
+ const p=await getLoc(),cs=contacts();
+ const loc=p?'My exact location: https://maps.google.com/?q='+p.lat.toFixed(6)+','+p.lon.toFixed(6)+' (accuracy ±'+Math.round(p.acc)+' m).':'Location unavailable, please call me.';
+ const m='🚨 SOS! I need help. '+loc+' Sent via RaahSaathi at '+new Date().toLocaleString();
+ const sep=/iPhone|iPad/.test(navigator.userAgent)?'&':'?',sms='sms:'+cs.map(c=>c.p).join(',')+sep+'body='+encodeURIComponent(m);
+ r.innerHTML='<p><b>'+(p?'Location found.':'No GPS fix.')+'</b> Tap Send in your message app. Message:</p><p style="background:var(--bg);padding:8px;border-radius:8px;word-break:break-word">'+m.replace(/</g,'&lt;')+'</p><div class="row"><a class="b p" href="'+sms+'">Text all contacts</a>'+
+  cs.map(c=>'<a class="b" target="_blank" rel="noopener" href="https://wa.me/'+c.p.replace(/\D/g,'')+'?text='+encodeURIComponent(m)+'">WhatsApp '+(c.n||c.p).replace(/</g,'')+'</a>').join('')+
+  '<a class="b p" style="background:var(--rd);border-color:var(--rd)" href="tel:112">Call 112</a>'+(navigator.share?'<button class="b" id="shr">Share</button>':'')+'</div>';
+ if($('#shr'))$('#shr').onclick=()=>navigator.share({text:m}).catch(()=>{});
+ try{location.href=sms}catch(e){}}
+
+/* ---------- Features ---------- */
+const FE=[['Perception',[['Indian road classes: auto-rickshaw, two-wheeler, cow, truck, pedestrian',1],['Pothole, speed-breaker and waterlogging detection',1],['Lane-less drivable-area handling',1],['Night, fog and monsoon robustness',1],['Camera-only low-cost mode',1]]],
+['Prediction',[['Erratic-driver risk scoring',1],['Pedestrian intent (jaywalking, crossing)',1],['Honk and sound cue detection (simulated)',1],['Two-wheeler gap-filtering model',0]]],
+['Planning',[['Gap-seeking planner for mixed traffic',1],['Cost map with live risk heatmap',1],['Hybrid A* + MPC local planner',0],['Informal right-of-way negotiation',0],['Unpaved and village-road mode',0]]],
+['Safety',[['Four-level response: warn, slow, brake',1],['Time-to-collision with probabilistic risk',1],['Vulnerable road user priority',1],['Fail-safe fallback on sensor loss',0]]],
+['Testing and learning',[['Edge-case scenario injector',1],['Explainable decisions panel',1],['Black-box incident log',1],['Benchmark counters: collisions, near misses',1],['IDD dataset training and online adaptation',0]]],
+['Platform',[['Offline-ready map with hazard pins',1],['SOS with GPS location to saved contacts',1],['India emergency number directory',1],['V2X-lite messaging',0],['Edge deployment on Jetson or Raspberry Pi',0]]]];
+$('#fl').innerHTML=FE.map(g=>'<h3>'+g[0]+'</h3>'+g[1].map(i=>'<div class="fi"><span>'+i[0]+'</span><span class="chip '+(i[1]?'y':'n')+'">'+(i[1]?'Live':'Planned')+'</span></div>').join('')).join('');
+
+/* ---------- Emergency numbers ---------- */
+const EN=[['112','All-in-one emergency','Police, fire, ambulance'],['100','Police',''],['101','Fire',''],['102','Ambulance','Mainly maternal and child care'],['108','Emergency ambulance','Free in most states'],['1073','Road accident emergency','Availability varies by state'],['1033','Highway helpline','National Highways (NHAI)'],['1091','Women in distress',''],['181','Women helpline',''],['1098','Childline',''],['1930','Cyber crime',''],['1078','Disaster management',''],['14567','Senior citizen helpline',''],['1363','Tourist helpline','24x7']];
+function rn(q){q=(q||'').toLowerCase();$('#nl').innerHTML=EN.filter(e=>(e.join(' ')).toLowerCase().includes(q)).map(e=>'<div class="num"><span class="n">'+e[0]+'</span><span class="t">'+e[1]+(e[2]?'<small>'+e[2]+'</small>':'')+'</span><a class="b p" href="tel:'+e[0]+'">Call</a></div>').join('')||'<p class="mu">No match.</p>'}
+$('#nq').oninput=e=>rn(e.target.value);rn();
+</script>
+</body>
+</html>
